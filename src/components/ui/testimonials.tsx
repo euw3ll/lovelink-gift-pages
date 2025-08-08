@@ -37,6 +37,13 @@ const Testimonials = () => {
       text: "Usei para pedir em casamento! Coloquei todas nossas fotos e no final o pedido. Ela disse SIM chorando! Melhor investimento da vida.",
       rating: 5,
       relation: "Noivos felizes"
+    },
+    {
+      name: "Sofia & Ricardo",
+      emoji: "🎉",
+      text: "Criamos uma página tema Spotify com todas as músicas que marcaram nossa relação. Nossos amigos ficaram impressionados com a criatividade!",
+      rating: 5,
+      relation: "1 ano juntos"
     }
   ];
 

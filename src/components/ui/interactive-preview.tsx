@@ -1,19 +1,67 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Heart, Upload, Sparkles } from "lucide-react";
+import NetflixTheme from "./theme-templates/netflix-theme";
+import SpotifyTheme from "./theme-templates/spotify-theme";
+import PolaroidTheme from "./theme-templates/polaroid-theme";
+import InstagramTheme from "./theme-templates/instagram-theme";
+import LoveLetterTheme from "./theme-templates/love-letter-theme";
+import LoveMapTheme from "./theme-templates/love-map-theme";
 
 const InteractivePreview = () => {
   const [previewData, setPreviewData] = useState({
     name1: "",
     name2: "",
-    imageUploaded: false
+    selectedTheme: "netflix",
+    uploadedImage: null as string | null
   });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (field: string, value: string) => {
     setPreviewData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewData(prev => ({ 
+          ...prev, 
+          uploadedImage: e.target?.result as string 
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const renderThemePreview = () => {
+    const themeProps = {
+      name1: previewData.name1,
+      name2: previewData.name2,
+      uploadedImage: previewData.uploadedImage
+    };
+
+    switch (previewData.selectedTheme) {
+      case "netflix":
+        return <NetflixTheme {...themeProps} />;
+      case "spotify":
+        return <SpotifyTheme {...themeProps} />;
+      case "polaroid":
+        return <PolaroidTheme {...themeProps} />;
+      case "instagram":
+        return <InstagramTheme {...themeProps} />;
+      case "love-letter":
+        return <LoveLetterTheme {...themeProps} />;
+      case "love-map":
+        return <LoveMapTheme {...themeProps} />;
+      default:
+        return <NetflixTheme {...themeProps} />;
+    }
   };
 
   return (
@@ -21,7 +69,7 @@ const InteractivePreview = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-            Teste{" "}
+            Visualize{" "}
             <span className="bg-gradient-to-r from-primary to-pink-500 bg-clip-text text-transparent">
               Agora Mesmo
             </span>
@@ -31,13 +79,13 @@ const InteractivePreview = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto items-center">
+        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto items-center animate-fade-in">
           {/* Input Form */}
-          <Card className="border-border/50 shadow-[var(--shadow-soft)]">
+          <Card className="border-border/50 shadow-[var(--shadow-soft)] hover:scale-105 transition-transform duration-300">
             <CardHeader className="text-center pb-4">
               <CardTitle className="flex items-center justify-center gap-2 text-2xl">
                 <Sparkles className="text-primary" size={24} />
-                Criar Preview
+                Personalizar
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -65,11 +113,38 @@ const InteractivePreview = () => {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="theme-select">Escolha o tema</Label>
+                <Select value={previewData.selectedTheme} onValueChange={(value) => handleInputChange("selectedTheme", value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione um tema" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="netflix">Netflix & Chill</SelectItem>
+                    <SelectItem value="spotify">Spotify Love</SelectItem>
+                    <SelectItem value="polaroid">Álbum Polaroid</SelectItem>
+                    <SelectItem value="instagram">Instagram Stories</SelectItem>
+                    <SelectItem value="love-letter">Carta de Amor</SelectItem>
+                    <SelectItem value="love-map">Mapa do Amor</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
                 <Label>Foto do casal</Label>
-                <div className="border-2 border-dashed border-border hover:border-primary/50 transition-colors rounded-lg p-8 text-center cursor-pointer group">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <div 
+                  className="border-2 border-dashed border-border hover:border-primary/50 transition-colors rounded-lg p-8 text-center cursor-pointer group"
+                  onClick={() => fileInputRef.current?.click()}
+                >
                   <Upload className="mx-auto mb-4 text-muted-foreground group-hover:text-primary transition-colors" size={32} />
                   <p className="text-muted-foreground group-hover:text-primary transition-colors">
-                    Clique para fazer upload da foto
+                    {previewData.uploadedImage ? "Foto carregada! Clique para trocar" : "Clique para fazer upload da foto"}
                   </p>
                   <p className="text-xs text-muted-foreground mt-2">
                     PNG, JPG até 5MB
@@ -82,48 +157,17 @@ const InteractivePreview = () => {
                 size="lg"
               >
                 <Heart className="mr-2" size={18} />
-                Gerar Preview
+                Visualizar
               </Button>
             </CardContent>
           </Card>
 
           {/* Preview Mockup */}
-          <div className="relative">
-            <div className="bg-gradient-to-br from-love-subtle to-pink-100 rounded-3xl p-8 shadow-[var(--shadow-soft)] relative overflow-hidden">
-              {/* Mockup Phone Frame */}
-              <div className="bg-white rounded-2xl shadow-lg p-6 max-w-sm mx-auto">
-                <div className="text-center space-y-4">
-                  {/* Profile Picture Placeholder */}
-                  <div className="w-24 h-24 mx-auto bg-gradient-to-br from-primary to-pink-500 rounded-full flex items-center justify-center text-white text-2xl shadow-lg">
-                    💕
-                  </div>
-                  
-                  {/* Names */}
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-primary">
-                      {previewData.name1 || "Seu Nome"} ❤️ {previewData.name2 || "Amor"}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Nossa história de amor
-                    </p>
-                  </div>
-
-                  {/* Sample Content */}
-                  <div className="space-y-3 text-left">
-                    <div className="bg-love-subtle rounded-lg p-3">
-                      <p className="text-sm text-primary font-medium">💌 Primeira mensagem</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        "Você mudou minha vida de uma forma que eu nunca imaginei..."
-                      </p>
-                    </div>
-                    
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="aspect-square bg-gradient-to-br from-pink-200 to-pink-300 rounded-lg flex items-center justify-center text-xs">📸</div>
-                      <div className="aspect-square bg-gradient-to-br from-purple-200 to-purple-300 rounded-lg flex items-center justify-center text-xs">💕</div>
-                      <div className="aspect-square bg-gradient-to-br from-red-200 to-red-300 rounded-lg flex items-center justify-center text-xs">🎵</div>
-                    </div>
-                  </div>
-                </div>
+          <div className="relative animate-fade-in" style={{ animationDelay: "0.3s" }}>
+            <div className="bg-gradient-to-br from-love-subtle to-pink-100 rounded-3xl p-4 shadow-[var(--shadow-soft)] relative overflow-hidden hover:shadow-[var(--shadow-love)] transition-shadow duration-500">
+              {/* Theme Preview */}
+              <div className="max-w-sm mx-auto">
+                {renderThemePreview()}
               </div>
 
               {/* Floating decorations */}

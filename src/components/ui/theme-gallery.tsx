@@ -61,7 +61,8 @@ const ThemeGallery = () => {
           {themes.map((theme, index) => (
             <Card 
               key={index} 
-              className="group overflow-hidden hover:shadow-[var(--shadow-love)] transition-all duration-300 hover:scale-105 cursor-pointer border-border/50 hover:border-primary/30"
+              className="group overflow-hidden hover:shadow-[var(--shadow-love)] transition-all duration-500 hover:scale-105 cursor-pointer border-border/50 hover:border-primary/30 animate-fade-in"
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               <CardContent className="p-0">
                 {/* Theme Preview */}

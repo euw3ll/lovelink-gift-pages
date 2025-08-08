@@ -20,12 +20,12 @@ const HeroSection = () => {
             <div className="space-y-4">
               <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
                 Crie uma surpresa{" "}
-                <span className="bg-gradient-to-r from-primary to-pink-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-primary to-pink-500 bg-clip-text text-transparent animate-pulse">
                   digital inesquecível
                 </span>{" "}
-                para quem você ama
+                <span className="inline-block animate-bounce">para quem você ama</span>
               </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl">
+              <p className="text-xl text-muted-foreground max-w-2xl lg:max-w-none">
                 LoveLink é a plataforma que transforma seus sentimentos em páginas personalizadas únicas. 
                 Crie presentes digitais com fotos, vídeos e mensagens especiais.
               </p>
