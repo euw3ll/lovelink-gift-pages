@@ -18,23 +18,30 @@ const HeroSection = () => {
           {/* Left Content */}
           <div className="text-center lg:text-left space-y-8">
             <div className="space-y-4">
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                Crie uma surpresa{" "}
-                <span className="bg-gradient-to-r from-primary to-pink-500 bg-clip-text text-transparent animate-pulse">
-                  digital inesquecível
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                <span className="inline-block animate-[fadeInUp_0.6s_ease-out]">Crie</span>{" "}
+                <span className="inline-block animate-[fadeInUp_0.6s_ease-out_0.1s_both]">uma</span>{" "}
+                <span className="inline-block animate-[fadeInUp_0.6s_ease-out_0.2s_both]">surpresa</span>{" "}
+                <span className="inline-block animate-[fadeInUp_0.6s_ease-out_0.3s_both]">digital</span>{" "}
+                <span className="bg-gradient-to-r from-primary to-pink-500 bg-clip-text text-transparent inline-block animate-[fadeInUp_0.6s_ease-out_0.4s_both]">
+                  inesquecível
                 </span>{" "}
-                <span className="inline-block animate-bounce">para quem você ama</span>
+                <span className="inline-block animate-[fadeInUp_0.6s_ease-out_0.5s_both]">para</span>{" "}
+                <span className="inline-block animate-[fadeInUp_0.6s_ease-out_0.6s_both]">quem</span>{" "}
+                <span className="inline-block animate-[fadeInUp_0.6s_ease-out_0.7s_both]">você</span>{" "}
+                <span className="inline-block animate-[fadeInUp_0.6s_ease-out_0.8s_both]">ama.</span>
               </h1>
-              <p className="text-xl text-muted-foreground max-w-2xl lg:max-w-none">
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 animate-fade-in px-4 md:px-0" style={{ animationDelay: "0.9s" }}>
                 LoveLink é a plataforma que transforma seus sentimentos em páginas personalizadas únicas. 
                 Crie presentes digitais com fotos, vídeos e mensagens especiais.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in" style={{ animationDelay: "1.1s" }}>
               <Button 
                 size="lg" 
                 className="bg-gradient-to-r from-primary to-pink-500 hover:from-primary/90 hover:to-pink-500/90 shadow-[var(--shadow-love)] text-lg px-8 py-6 rounded-full transform hover:scale-105 transition-all duration-300"
+                onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 <Heart className="mr-2" size={20} />
                 Comece Agora
@@ -43,6 +50,7 @@ const HeroSection = () => {
                 variant="outline" 
                 size="lg" 
                 className="border-primary text-primary hover:bg-love-subtle text-lg px-8 py-6 rounded-full transition-all duration-300"
+                onClick={() => document.getElementById('preview')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 Ver Exemplos
               </Button>

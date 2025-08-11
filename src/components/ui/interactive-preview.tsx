@@ -65,11 +65,11 @@ const InteractivePreview = () => {
   };
 
   return (
-    <section className="py-20 bg-background">
+    <section id="preview" className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-            Visualize{" "}
+            Teste{" "}
             <span className="bg-gradient-to-r from-primary to-pink-500 bg-clip-text text-transparent">
               Agora Mesmo
             </span>
@@ -155,9 +155,10 @@ const InteractivePreview = () => {
               <Button 
                 className="w-full bg-gradient-to-r from-primary to-pink-500 hover:from-primary/90 hover:to-pink-500/90 shadow-[var(--shadow-love)]"
                 size="lg"
+                onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 <Heart className="mr-2" size={18} />
-                Visualizar
+                Quero esse!
               </Button>
             </CardContent>
           </Card>
@@ -166,8 +167,10 @@ const InteractivePreview = () => {
           <div className="relative animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <div className="bg-gradient-to-br from-love-subtle to-pink-100 rounded-3xl p-4 shadow-[var(--shadow-soft)] relative overflow-hidden hover:shadow-[var(--shadow-love)] transition-shadow duration-500">
               {/* Theme Preview */}
-              <div className="max-w-sm mx-auto">
-                {renderThemePreview()}
+              <div className="w-full max-w-md mx-auto overflow-hidden">
+                <div className="scale-90 origin-top">
+                  {renderThemePreview()}
+                </div>
               </div>
 
               {/* Floating decorations */}
