@@ -69,6 +69,13 @@ const ThemeGallery = () => {
                 <div className={`h-40 bg-gradient-to-br ${theme.color} relative flex items-center justify-center text-white overflow-hidden`}>
                   <div className="text-6xl">{theme.emoji}</div>
                   
+                  {/* Overlay on hover */}
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <Button variant="secondary" size="sm" className="gap-2">
+                      <Eye size={16} />
+                      Preview
+                    </Button>
+                  </div>
 
                   {/* Floating hearts */}
                   <Heart className="absolute top-4 right-4 text-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse" size={20} />

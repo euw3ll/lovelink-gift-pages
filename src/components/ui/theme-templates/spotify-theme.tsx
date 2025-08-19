@@ -90,7 +90,7 @@ const SpotifyTheme = ({ name1, name2, uploadedImage }: SpotifyThemeProps) => {
       </div>
 
       {/* Player Footer */}
-      <div className="bg-gray-900 p-3 flex items-center justify-between">
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-900 p-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-green-400 rounded flex items-center justify-center text-black text-xs">
             💕
