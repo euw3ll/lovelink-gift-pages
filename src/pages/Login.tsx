@@ -19,14 +19,14 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      if (!res.ok) {
+      if (!res.ok || !data.token) {
         setError(data.error || "Erro ao fazer login");
         return;
       }
       localStorage.setItem("token", data.token);
       navigate("/dashboard");
-    } catch {
-      setError("Erro de rede");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro de rede");
     }
   };
 
