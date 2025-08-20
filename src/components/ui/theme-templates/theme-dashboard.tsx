@@ -39,6 +39,18 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
     caption: "",
   });
 
+  const [loveLetterData, setLoveLetterData] = useState({
+    name1: "",
+    name2: "",
+    uploadedImage: "",
+  });
+
+  const [loveMapData, setLoveMapData] = useState({
+    name1: "",
+    name2: "",
+    uploadedImage: "",
+  });
+
   const [genericData, setGenericData] = useState<Record<string, string>>({});
 
   const handleNetflixMovieChange = (
@@ -303,6 +315,86 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
             </div>
           </div>
         );
+      case "love-letter":
+        return (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Nome 1</Label>
+                <Input
+                  value={loveLetterData.name1}
+                  onChange={(e) =>
+                    setLoveLetterData({ ...loveLetterData, name1: e.target.value })
+                  }
+                  placeholder="Nome 1"
+                />
+              </div>
+              <div>
+                <Label>Nome 2</Label>
+                <Input
+                  value={loveLetterData.name2}
+                  onChange={(e) =>
+                    setLoveLetterData({ ...loveLetterData, name2: e.target.value })
+                  }
+                  placeholder="Nome 2"
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Imagem (URL)</Label>
+              <Input
+                value={loveLetterData.uploadedImage}
+                onChange={(e) =>
+                  setLoveLetterData({
+                    ...loveLetterData,
+                    uploadedImage: e.target.value,
+                  })
+                }
+                placeholder="https://..."
+              />
+            </div>
+          </div>
+        );
+      case "love-map":
+        return (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Nome 1</Label>
+                <Input
+                  value={loveMapData.name1}
+                  onChange={(e) =>
+                    setLoveMapData({ ...loveMapData, name1: e.target.value })
+                  }
+                  placeholder="Nome 1"
+                />
+              </div>
+              <div>
+                <Label>Nome 2</Label>
+                <Input
+                  value={loveMapData.name2}
+                  onChange={(e) =>
+                    setLoveMapData({ ...loveMapData, name2: e.target.value })
+                  }
+                  placeholder="Nome 2"
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Imagem (URL)</Label>
+              <Input
+                value={loveMapData.uploadedImage}
+                onChange={(e) =>
+                  setLoveMapData({
+                    ...loveMapData,
+                    uploadedImage: e.target.value,
+                  })
+                }
+                placeholder="https://..."
+              />
+            </div>
+          </div>
+        );
       default:
         return (
           <div className="text-sm text-muted-foreground">
@@ -321,6 +413,10 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
         ? spotifyData
         : theme === "instagram"
         ? instagramData
+        : theme === "love-letter"
+        ? loveLetterData
+        : theme === "love-map"
+        ? loveMapData
         : genericData;
     onSubmit?.(data);
   };

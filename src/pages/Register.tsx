@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const Login = () => {
+const Register = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -13,14 +14,14 @@ const Login = () => {
     e.preventDefault();
     setError("");
     try {
-      const res = await fetch("http://localhost:4000/api/login", {
+      const res = await fetch("http://localhost:4000/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "Erro ao fazer login");
+        setError(data.error || "Erro ao registrar");
         return;
       }
       localStorage.setItem("token", data.token);
@@ -33,7 +34,14 @@ const Login = () => {
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
-        <h1 className="text-2xl font-bold text-center">Login</h1>
+        <h1 className="text-2xl font-bold text-center">Registrar</h1>
+        <Input
+          type="text"
+          placeholder="Nome"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
         <Input
           type="email"
           placeholder="Email"
@@ -50,14 +58,14 @@ const Login = () => {
         />
         {error && <p className="text-sm text-red-500">{error}</p>}
         <Button type="submit" className="w-full">
-          Entrar
+          Registrar
         </Button>
         <p className="text-center text-sm">
-          Não tem conta? <Link to="/register" className="underline">Registre-se</Link>
+          Já tem conta? <Link to="/login" className="underline">Entrar</Link>
         </p>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Register;

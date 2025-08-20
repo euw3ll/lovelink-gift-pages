@@ -15,7 +15,8 @@ const Dashboard = () => {
   const [theme, setTheme] = useState<ThemeType>("netflix");
 
   useEffect(() => {
-    if (localStorage.getItem("loggedIn") !== "true") {
+    const token = localStorage.getItem("token");
+    if (!token) {
       navigate("/login");
     }
   }, [navigate]);
