@@ -15,7 +15,7 @@ const Dashboard = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 text-center">
       <h1 className="text-2xl font-bold">Bem-vindo ao Dashboard!</h1>
-      <Button>Criar Nova Página</Button>
+      <Button onClick={() => navigate("/dashboard/themes")}>Criar Nova Página</Button>
     </div>
   );
 };
