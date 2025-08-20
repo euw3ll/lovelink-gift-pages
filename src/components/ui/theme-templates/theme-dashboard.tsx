@@ -22,7 +22,7 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
     name2: "",
     uploadedImage: "",
     heroVideo: "",
-    movies: [{ cover: "", video: "" }],
+    movies: [{ cover: "", video: "", category: "" }],
   });
 
   const [spotifyData, setSpotifyData] = useState({
@@ -43,7 +43,7 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
 
   const handleNetflixMovieChange = (
     index: number,
-    field: "cover" | "video",
+    field: "cover" | "video" | "category",
     value: string
   ) => {
     const movies = [...netflixData.movies];
@@ -54,7 +54,7 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
   const addNetflixMovie = () => {
     setNetflixData({
       ...netflixData,
-      movies: [...netflixData.movies, { cover: "", video: "" }],
+      movies: [...netflixData.movies, { cover: "", video: "", category: "" }],
     });
   };
 
@@ -121,7 +121,14 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
             <div className="space-y-2">
               <Label>Filmes</Label>
               {netflixData.movies.map((movie, index) => (
-                <div key={index} className="grid grid-cols-2 gap-2">
+                <div key={index} className="grid grid-cols-3 gap-2">
+                  <Input
+                    value={movie.category}
+                    onChange={(e) =>
+                      handleNetflixMovieChange(index, "category", e.target.value)
+                    }
+                    placeholder="Categoria"
+                  />
                   <Input
                     value={movie.cover}
                     onChange={(e) =>
