@@ -35,8 +35,7 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
   const [instagramData, setInstagramData] = useState({
     name1: "",
     name2: "",
-    image: "",
-    caption: "",
+    posts: [{ image: "", caption: "" }],
   });
 
   const [genericData, setGenericData] = useState<Record<string, string>>({});
@@ -55,6 +54,23 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
     setNetflixData({
       ...netflixData,
       movies: [...netflixData.movies, { cover: "", video: "" }],
+    });
+  };
+
+  const handleInstagramPostChange = (
+    index: number,
+    field: "image" | "caption",
+    value: string
+  ) => {
+    const posts = [...instagramData.posts];
+    posts[index] = { ...posts[index], [field]: value };
+    setInstagramData({ ...instagramData, posts });
+  };
+
+  const addInstagramPost = () => {
+    setInstagramData({
+      ...instagramData,
+      posts: [...instagramData.posts, { image: "", caption: "" }],
     });
   };
 
@@ -288,33 +304,30 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
               </div>
             </div>
 
-            {/* Imagem e legenda */}
-            <div>
-              <Label>Imagem do post (URL)</Label>
-              <Input
-                value={instagramData.image}
-                onChange={(e) =>
-                  setInstagramData({
-                    ...instagramData,
-                    image: e.target.value,
-                  })
-                }
-                placeholder="https://..."
-              />
-            </div>
-            <div>
-              <Label>Legenda</Label>
-              <Input
-                value={instagramData.caption}
-                onChange={(e) =>
-                  setInstagramData({
-                    ...instagramData,
-                    caption: e.target.value,
-                  })
-                }
-                placeholder="Nossa história..."
-              />
-            </div>
+            {/* Posts */}
+            {instagramData.posts.map((post, index) => (
+              <div key={index} className="space-y-2">
+                <Label>{`Imagem do post ${index + 1} (URL)`}</Label>
+                <Input
+                  value={post.image}
+                  onChange={(e) =>
+                    handleInstagramPostChange(index, "image", e.target.value)
+                  }
+                  placeholder="https://..."
+                />
+                <Label>{`Legenda ${index + 1}`}</Label>
+                <Input
+                  value={post.caption}
+                  onChange={(e) =>
+                    handleInstagramPostChange(index, "caption", e.target.value)
+                  }
+                  placeholder="Nossa história..."
+                />
+              </div>
+            ))}
+            <Button type="button" onClick={addInstagramPost}>
+              Adicionar Post
+            </Button>
           </div>
         );
 
