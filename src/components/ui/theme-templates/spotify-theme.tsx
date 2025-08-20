@@ -1,21 +1,42 @@
-import { Card } from "@/components/ui/card";
+import { useRef, useState } from "react";
 import { Play, Heart, MoreHorizontal, Shuffle, SkipBack, SkipForward, Repeat } from "lucide-react";
+
+interface SpotifySong {
+  title: string;
+  artist: string;
+  audio?: string;
+  duration?: string;
+}
 
 interface SpotifyThemeProps {
   name1: string;
   name2: string;
   uploadedImage?: string;
+  songs?: SpotifySong[];
 }
 
-const SpotifyTheme = ({ name1, name2, uploadedImage }: SpotifyThemeProps) => {
+const defaultSongs: SpotifySong[] = [
+  { title: "Perfect", artist: "Ed Sheeran", duration: "4:23" },
+  { title: "All of Me", artist: "John Legend", duration: "4:29" },
+  { title: "Thinking Out Loud", artist: "Ed Sheeran", duration: "4:41" },
+  { title: "A Thousand Years", artist: "Christina Perri", duration: "4:45" },
+];
+
+const SpotifyTheme = ({ name1, name2, uploadedImage, songs = [] }: SpotifyThemeProps) => {
   const playlistName = name1 && name2 ? `${name1} & ${name2}` : "Nossa Playlist";
-  
-  const songs = [
-    { title: "Perfect", artist: "Ed Sheeran", duration: "4:23" },
-    { title: "All of Me", artist: "John Legend", duration: "4:29" },
-    { title: "Thinking Out Loud", artist: "Ed Sheeran", duration: "4:41" },
-    { title: "A Thousand Years", artist: "Christina Perri", duration: "4:45" }
-  ];
+  const songList = songs.length > 0 ? songs : defaultSongs;
+  const [currentSong, setCurrentSong] = useState<SpotifySong | null>(
+    songList[0] || null
+  );
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const playSong = (song: SpotifySong) => {
+    setCurrentSong(song);
+    if (audioRef.current && song.audio) {
+      audioRef.current.src = song.audio;
+      audioRef.current.play().catch(() => {});
+    }
+  };
 
   return (
     <div className="bg-gradient-to-b from-green-900 to-black text-white rounded-lg overflow-hidden min-h-[400px] font-sans">
@@ -45,7 +66,7 @@ const SpotifyTheme = ({ name1, name2, uploadedImage }: SpotifyThemeProps) => {
           <p className="text-sm uppercase tracking-wider">Playlist</p>
           <h1 className="text-4xl md:text-6xl font-bold">{playlistName}</h1>
           <p className="text-gray-300">
-            {name1 || "Você"} • {songs.length} músicas, aproximadamente 18 min
+            {name1 || "Você"} • {songList.length} músicas
           </p>
         </div>
       </div>
@@ -67,10 +88,11 @@ const SpotifyTheme = ({ name1, name2, uploadedImage }: SpotifyThemeProps) => {
           <div className="col-span-3 text-right">DURAÇÃO</div>
         </div>
         
-        {songs.map((song, index) => (
-          <div 
-            key={index} 
-            className="grid grid-cols-12 gap-4 py-2 hover:bg-white/10 rounded group text-sm"
+        {songList.map((song, index) => (
+          <div
+            key={index}
+            className="grid grid-cols-12 gap-4 py-2 hover:bg-white/10 rounded group text-sm cursor-pointer"
+            onClick={() => playSong(song)}
           >
             <div className="col-span-1 text-gray-400 group-hover:hidden">
               {index + 1}
@@ -96,19 +118,26 @@ const SpotifyTheme = ({ name1, name2, uploadedImage }: SpotifyThemeProps) => {
             💕
           </div>
           <div>
-            <div className="text-sm font-medium">Perfect</div>
-            <div className="text-xs text-gray-400">Ed Sheeran</div>
+            <div className="text-sm font-medium">
+              {currentSong?.title || "Selecione uma música"}
+            </div>
+            <div className="text-xs text-gray-400">
+              {currentSong?.artist}
+            </div>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <Shuffle size={16} className="text-gray-400" />
           <SkipBack size={16} />
-          <Play size={16} />
+          <button onClick={() => currentSong && playSong(currentSong)}>
+            <Play size={16} />
+          </button>
           <SkipForward size={16} />
           <Repeat size={16} className="text-gray-400" />
         </div>
       </div>
+      <audio ref={audioRef} className="hidden" />
     </div>
   );
 };
