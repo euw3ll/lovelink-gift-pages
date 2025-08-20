@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 export type ThemeType =
   | "netflix"
@@ -39,6 +40,20 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
     caption: "",
   });
 
+  const [loveLetterData, setLoveLetterData] = useState({
+    name1: "",
+    name2: "",
+    uploadedImage: "",
+    letterText: "",
+  });
+
+  const [loveMapData, setLoveMapData] = useState({
+    name1: "",
+    name2: "",
+    uploadedImage: "",
+    pins: [{ name: "", emoji: "", top: "", left: "" }],
+  });
+
   const [genericData, setGenericData] = useState<Record<string, string>>({});
 
   const handleNetflixMovieChange = (
@@ -55,6 +70,23 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
     setNetflixData({
       ...netflixData,
       movies: [...netflixData.movies, { cover: "", video: "" }],
+    });
+  };
+
+  const handleLoveMapPinChange = (
+    index: number,
+    field: "name" | "emoji" | "top" | "left",
+    value: string
+  ) => {
+    const pins = [...loveMapData.pins];
+    pins[index] = { ...pins[index], [field]: value };
+    setLoveMapData({ ...loveMapData, pins });
+  };
+
+  const addLoveMapPin = () => {
+    setLoveMapData({
+      ...loveMapData,
+      pins: [...loveMapData.pins, { name: "", emoji: "", top: "", left: "" }],
     });
   };
 
@@ -318,6 +350,145 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
           </div>
         );
 
+      case "love-letter":
+        return (
+          <div className="space-y-4">
+            {/* Nomes */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Nome 1</Label>
+                <Input
+                  value={loveLetterData.name1}
+                  onChange={(e) =>
+                    setLoveLetterData({ ...loveLetterData, name1: e.target.value })
+                  }
+                  placeholder="Nome 1"
+                />
+              </div>
+              <div>
+                <Label>Nome 2</Label>
+                <Input
+                  value={loveLetterData.name2}
+                  onChange={(e) =>
+                    setLoveLetterData({ ...loveLetterData, name2: e.target.value })
+                  }
+                  placeholder="Nome 2"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label>Foto (URL)</Label>
+              <Input
+                value={loveLetterData.uploadedImage}
+                onChange={(e) =>
+                  setLoveLetterData({
+                    ...loveLetterData,
+                    uploadedImage: e.target.value,
+                  })
+                }
+                placeholder="https://..."
+              />
+            </div>
+
+            <div>
+              <Label>Texto da carta</Label>
+              <Textarea
+                value={loveLetterData.letterText}
+                onChange={(e) =>
+                  setLoveLetterData({
+                    ...loveLetterData,
+                    letterText: e.target.value,
+                  })
+                }
+                placeholder="Escreva sua mensagem"
+              />
+            </div>
+          </div>
+        );
+
+      case "love-map":
+        return (
+          <div className="space-y-4">
+            {/* Nomes */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Nome 1</Label>
+                <Input
+                  value={loveMapData.name1}
+                  onChange={(e) =>
+                    setLoveMapData({ ...loveMapData, name1: e.target.value })
+                  }
+                  placeholder="Nome 1"
+                />
+              </div>
+              <div>
+                <Label>Nome 2</Label>
+                <Input
+                  value={loveMapData.name2}
+                  onChange={(e) =>
+                    setLoveMapData({ ...loveMapData, name2: e.target.value })
+                  }
+                  placeholder="Nome 2"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label>Foto central (URL)</Label>
+              <Input
+                value={loveMapData.uploadedImage}
+                onChange={(e) =>
+                  setLoveMapData({
+                    ...loveMapData,
+                    uploadedImage: e.target.value,
+                  })
+                }
+                placeholder="https://..."
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Pins do mapa</Label>
+              {loveMapData.pins.map((pin, index) => (
+                <div key={index} className="grid grid-cols-4 gap-2">
+                  <Input
+                    value={pin.name}
+                    onChange={(e) =>
+                      handleLoveMapPinChange(index, "name", e.target.value)
+                    }
+                    placeholder="Nome"
+                  />
+                  <Input
+                    value={pin.emoji}
+                    onChange={(e) =>
+                      handleLoveMapPinChange(index, "emoji", e.target.value)
+                    }
+                    placeholder="Emoji"
+                  />
+                  <Input
+                    value={pin.top}
+                    onChange={(e) =>
+                      handleLoveMapPinChange(index, "top", e.target.value)
+                    }
+                    placeholder="Top (%)"
+                  />
+                  <Input
+                    value={pin.left}
+                    onChange={(e) =>
+                      handleLoveMapPinChange(index, "left", e.target.value)
+                    }
+                    placeholder="Left (%)"
+                  />
+                </div>
+              ))}
+              <Button type="button" variant="outline" onClick={addLoveMapPin}>
+                Adicionar Pin
+              </Button>
+            </div>
+          </div>
+        );
+
       case "polaroid":
         return (
           <div className="space-y-4">
@@ -352,6 +523,10 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
         ? spotifyData
         : theme === "instagram"
         ? instagramData
+        : theme === "love-letter"
+        ? loveLetterData
+        : theme === "love-map"
+        ? loveMapData
         : genericData;
     onSubmit?.(data);
   };
