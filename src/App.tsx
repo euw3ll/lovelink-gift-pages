@@ -9,6 +9,7 @@ import Auth from "./pages/Auth";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import ThemeDashboardPage from "./pages/ThemeDashboard";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/login" element={<Auth initialMode="login" />} />
           <Route path="/register" element={<Auth initialMode="register" />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/themes" element={<ThemeDashboardPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
