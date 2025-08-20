@@ -1,14 +1,14 @@
-import { Card } from "@/components/ui/card";
 import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal } from "lucide-react";
 
 interface InstagramThemeProps {
   name1: string;
   name2: string;
   uploadedImage?: string;
+  caption?: string;
 }
 
-const InstagramTheme = ({ name1, name2, uploadedImage }: InstagramThemeProps) => {
-  const username = name1 ? name1.toLowerCase().replace(' ', '_') : "nosso_amor";
+const InstagramTheme = ({ name1, name2, uploadedImage, caption }: InstagramThemeProps) => {
+  const username = name1 ? name1.toLowerCase().replace(" ", "_") : "nosso_amor";
   
   return (
     <div className="bg-white rounded-lg overflow-hidden min-h-[400px] font-sans border">
@@ -22,7 +22,9 @@ const InstagramTheme = ({ name1, name2, uploadedImage }: InstagramThemeProps) =>
           </div>
           <div>
             <div className="font-semibold text-sm">{username}</div>
-            <div className="text-xs text-gray-500">Local especial</div>
+            <div className="text-xs text-gray-500">
+              {name2 ? `com ${name2}` : "Local especial"}
+            </div>
           </div>
         </div>
         <MoreHorizontal size={20} />
@@ -57,7 +59,8 @@ const InstagramTheme = ({ name1, name2, uploadedImage }: InstagramThemeProps) =>
           <div className="text-sm">
             <span className="font-semibold">{username}</span>{" "}
             <span>
-              Cada momento ao seu lado é especial 💕 {name2 && `@${name2.toLowerCase().replace(' ', '_')}`} #amor #momentosespeciais #gratidao
+              {caption || "Cada momento ao seu lado é especial 💕"}
+              {name2 && ` @${name2.toLowerCase().replace(" ", "_")}`}
             </span>
           </div>
           <div className="text-gray-500 text-xs">Ver todos os 42 comentários</div>
