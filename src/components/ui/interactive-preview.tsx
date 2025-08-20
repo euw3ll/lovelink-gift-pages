@@ -43,7 +43,7 @@ const InteractivePreview = () => {
     const themeProps = {
       name1: previewData.name1,
       name2: previewData.name2,
-      uploadedImage: previewData.uploadedImage
+      coverImage: previewData.uploadedImage
     };
 
     switch (previewData.selectedTheme) {
