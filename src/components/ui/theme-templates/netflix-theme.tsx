@@ -1,14 +1,28 @@
-import { Card } from "@/components/ui/card";
-import { Play, Plus, ThumbsUp, Share2 } from "lucide-react";
+import { useState } from "react";
+import { Play, Plus, ThumbsUp, Share2, X } from "lucide-react";
+
+interface NetflixMovie {
+  cover: string;
+  video: string;
+}
 
 interface NetflixThemeProps {
   name1: string;
   name2: string;
   uploadedImage?: string;
+  heroVideo?: string;
+  movies?: NetflixMovie[];
 }
 
-const NetflixTheme = ({ name1, name2, uploadedImage }: NetflixThemeProps) => {
+const NetflixTheme = ({
+  name1,
+  name2,
+  uploadedImage,
+  heroVideo,
+  movies = [],
+}: NetflixThemeProps) => {
   const coupleTitle = name1 && name2 ? `${name1} & ${name2}` : "Nossa História";
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
   
   return (
     <div className="bg-black text-white rounded-lg overflow-hidden min-h-[400px] font-sans">
@@ -23,10 +37,18 @@ const NetflixTheme = ({ name1, name2, uploadedImage }: NetflixThemeProps) => {
       {/* Hero Section */}
       <div className="relative">
         <div className="h-48 bg-gradient-to-r from-red-900 to-red-700 flex items-center justify-center">
-          {uploadedImage ? (
-            <img 
-              src={uploadedImage} 
-              alt="Casal" 
+          {heroVideo ? (
+            <video
+              src={heroVideo}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+            />
+          ) : uploadedImage ? (
+            <img
+              src={uploadedImage}
+              alt="Casal"
               className="w-full h-full object-cover"
             />
           ) : (
@@ -56,11 +78,41 @@ const NetflixTheme = ({ name1, name2, uploadedImage }: NetflixThemeProps) => {
         <div>
           <h3 className="text-lg font-semibold mb-2">Nossos Momentos Especiais</h3>
           <div className="grid grid-cols-4 gap-2">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="aspect-video bg-gray-800 rounded flex items-center justify-center text-xs">
-                Ep {i}
-              </div>
-            ))}
+            {movies.length > 0
+              ? movies.map((movie, index) => (
+                  <div
+                    key={index}
+                    className="relative aspect-video bg-gray-800 rounded overflow-hidden"
+                  >
+                    {movie.cover ? (
+                      <img
+                        src={movie.cover}
+                        alt={`Filme ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center w-full h-full text-xs">
+                        Filme {index + 1}
+                      </div>
+                    )}
+                    {movie.video && (
+                      <button
+                        onClick={() => setActiveVideo(movie.video)}
+                        className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition"
+                      >
+                        <Play />
+                      </button>
+                    )}
+                  </div>
+                ))
+              : [1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className="aspect-video bg-gray-800 rounded flex items-center justify-center text-xs"
+                  >
+                    Ep {i}
+                  </div>
+                ))}
           </div>
         </div>
 
@@ -80,6 +132,24 @@ const NetflixTheme = ({ name1, name2, uploadedImage }: NetflixThemeProps) => {
           Repleta de momentos inesquecíveis, risadas e muito carinho.
         </p>
       </div>
+      {activeVideo && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+          <div className="relative w-full max-w-2xl">
+            <button
+              onClick={() => setActiveVideo(null)}
+              className="absolute -top-10 right-0 text-white"
+            >
+              <X size={24} />
+            </button>
+            <video
+              src={activeVideo}
+              controls
+              autoPlay
+              className="w-full h-auto rounded"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
