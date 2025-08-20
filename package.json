@@ -9,7 +9,8 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "export:txt": "node scripts/export-to-txt.mjs"
+    "export:txt": "node scripts/export-to-txt.mjs",
+    "server": "node server/index.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

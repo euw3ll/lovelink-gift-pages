@@ -63,6 +63,7 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
       case "netflix":
         return (
           <div className="space-y-4">
+            {/* Nomes */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Nome 1</Label>
@@ -85,6 +86,8 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
                 />
               </div>
             </div>
+
+            {/* Imagem de capa */}
             <div>
               <Label>Imagem de capa (URL)</Label>
               <Input
@@ -98,6 +101,8 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
                 placeholder="https://..."
               />
             </div>
+
+            {/* Vídeo de capa */}
             <div>
               <Label>Vídeo de capa (URL)</Label>
               <Input
@@ -111,6 +116,8 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
                 placeholder="https://..."
               />
             </div>
+
+            {/* Filmes */}
             <div className="space-y-2">
               <Label>Filmes</Label>
               {netflixData.movies.map((movie, index) => (
@@ -137,9 +144,11 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
             </div>
           </div>
         );
+
       case "spotify":
         return (
           <div className="space-y-4">
+            {/* Nomes */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Nome 1</Label>
@@ -162,6 +171,8 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
                 />
               </div>
             </div>
+
+            {/* Capa da playlist */}
             <div>
               <Label>Capa da playlist (URL)</Label>
               <Input
@@ -175,6 +186,8 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
                 placeholder="https://..."
               />
             </div>
+
+            {/* Músicas */}
             <div className="space-y-2">
               <Label>Músicas</Label>
               {spotifyData.songs.map((song, index) => (
@@ -183,7 +196,10 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
                     value={song.title}
                     onChange={(e) => {
                       const songs = [...spotifyData.songs];
-                      songs[index] = { ...songs[index], title: e.target.value };
+                      songs[index] = {
+                        ...songs[index],
+                        title: e.target.value,
+                      };
                       setSpotifyData({ ...spotifyData, songs });
                     }}
                     placeholder="Título"
@@ -192,7 +208,10 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
                     value={song.artist}
                     onChange={(e) => {
                       const songs = [...spotifyData.songs];
-                      songs[index] = { ...songs[index], artist: e.target.value };
+                      songs[index] = {
+                        ...songs[index],
+                        artist: e.target.value,
+                      };
                       setSpotifyData({ ...spotifyData, songs });
                     }}
                     placeholder="Artista"
@@ -201,7 +220,10 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
                     value={song.audio}
                     onChange={(e) => {
                       const songs = [...spotifyData.songs];
-                      songs[index] = { ...songs[index], audio: e.target.value };
+                      songs[index] = {
+                        ...songs[index],
+                        audio: e.target.value,
+                      };
                       setSpotifyData({ ...spotifyData, songs });
                     }}
                     placeholder="URL do áudio"
@@ -210,7 +232,10 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
                     value={song.duration}
                     onChange={(e) => {
                       const songs = [...spotifyData.songs];
-                      songs[index] = { ...songs[index], duration: e.target.value };
+                      songs[index] = {
+                        ...songs[index],
+                        duration: e.target.value,
+                      };
                       setSpotifyData({ ...spotifyData, songs });
                     }}
                     placeholder="Duração"
@@ -235,9 +260,11 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
             </div>
           </div>
         );
+
       case "instagram":
         return (
           <div className="space-y-4">
+            {/* Nomes */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Nome 1</Label>
@@ -260,6 +287,8 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
                 />
               </div>
             </div>
+
+            {/* Imagem e legenda */}
             <div>
               <Label>Imagem do post (URL)</Label>
               <Input
@@ -288,6 +317,7 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
             </div>
           </div>
         );
+
       case "polaroid":
         return (
           <div className="space-y-4">
@@ -303,6 +333,7 @@ const ThemeDashboard = ({ theme, onSubmit }: ThemeDashboardProps) => {
             </div>
           </div>
         );
+
       default:
         return (
           <div className="text-sm text-muted-foreground">
