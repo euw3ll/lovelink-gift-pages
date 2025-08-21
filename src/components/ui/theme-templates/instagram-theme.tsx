@@ -1,15 +1,29 @@
-import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal } from "lucide-react";
+// Caminho: src/components/ui/theme-templates/instagram-theme.tsx
 
-interface InstagramThemeProps {
-  name1: string;
-  name2: string;
-  uploadedImage?: string;
-  caption?: string;
-}
+// CORREÇÃO 1: Adicionamos a importação que faltava para todos os ícones.
+import {
+  Heart,
+  MessageCircle,
+  Send,
+  Bookmark,
+  MoreHorizontal,
+} from "lucide-react";
+// CORREÇÃO 2: Garantimos que o componente use nossa interface padrão.
+import { ThemeComponentProps } from "./types";
 
-const InstagramTheme = ({ name1, name2, uploadedImage, caption }: InstagramThemeProps) => {
-  const username = name1 ? name1.toLowerCase().replace(" ", "_") : "nosso_amor";
-  
+// A interface local "InstagramThemeProps" foi removida para usarmos a padrão.
+
+const InstagramTheme = ({
+  name1,
+  name2,
+  uploadedImage,
+  caption,
+}: ThemeComponentProps) => {
+  const username = name1
+    ? name1.toLowerCase().replace(/ /g, "_")
+    : "nosso.amor";
+  const displayCaption = caption || `Cada momento ao seu lado é especial 💕`;
+
   return (
     <div className="bg-white rounded-lg overflow-hidden min-h-[400px] font-sans border">
       {/* Instagram Header */}
@@ -33,9 +47,9 @@ const InstagramTheme = ({ name1, name2, uploadedImage, caption }: InstagramTheme
       {/* Post Image */}
       <div className="aspect-square bg-gradient-to-br from-pink-200 to-purple-300 flex items-center justify-center">
         {uploadedImage ? (
-          <img 
-            src={uploadedImage} 
-            alt="Nosso momento" 
+          <img
+            src={uploadedImage}
+            alt={`Post de ${username}`}
             className="w-full h-full object-cover"
           />
         ) : (
@@ -43,7 +57,7 @@ const InstagramTheme = ({ name1, name2, uploadedImage, caption }: InstagramTheme
         )}
       </div>
 
-      {/* Post Actions */}
+      {/* Post Actions & Caption */}
       <div className="p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-4">
@@ -53,37 +67,19 @@ const InstagramTheme = ({ name1, name2, uploadedImage, caption }: InstagramTheme
           </div>
           <Bookmark size={24} />
         </div>
-
         <div className="space-y-2">
           <div className="font-semibold text-sm">2.847 curtidas</div>
-          <div className="text-sm">
+          <div className="text-sm break-words">
             <span className="font-semibold">{username}</span>{" "}
             <span>
-              {caption || "Cada momento ao seu lado é especial 💕"}
-              {name2 && ` @${name2.toLowerCase().replace(" ", "_")}`}
+              {displayCaption}
+              {name2 && ` @${name2.toLowerCase().replace(/ /g, "_")}`}
             </span>
           </div>
-          <div className="text-gray-500 text-xs">Ver todos os 42 comentários</div>
+          <div className="text-gray-500 text-xs">
+            Ver todos os 42 comentários
+          </div>
           <div className="text-xs text-gray-500">Há 2 horas</div>
-        </div>
-      </div>
-
-      {/* Stories Preview */}
-      <div className="border-t p-4">
-        <div className="text-xs text-gray-500 mb-2">Stories em destaque</div>
-        <div className="flex gap-3">
-          {['Primeiro encontro', 'Viagens', 'Momentos'].map((story, index) => (
-            <div key={index} className="text-center">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-400 p-1">
-                <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-xs">
-                  {index === 0 ? '📸' : index === 1 ? '✈️' : '💕'}
-                </div>
-              </div>
-              <div className="text-xs mt-1 text-gray-600 truncate max-w-[48px]">
-                {story}
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </div>

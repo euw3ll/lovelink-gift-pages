@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { ThemeComponentProps } from "./types";
 
 interface LoveLetterThemeProps {
   name1: string;
@@ -6,15 +6,19 @@ interface LoveLetterThemeProps {
   uploadedImage?: string;
 }
 
-const LoveLetterTheme = ({ name1, name2, uploadedImage }: LoveLetterThemeProps) => {
+const LoveLetterTheme = ({
+  name1,
+  name2,
+  uploadedImage,
+}: LoveLetterThemeProps) => {
   const recipient = name2 || "Meu Amor";
   const sender = name1 || "Com amor";
-  
+
   return (
     <div className="bg-gradient-to-b from-rose-50 to-pink-50 p-8 rounded-lg min-h-[400px] font-serif relative overflow-hidden">
       {/* Paper Texture */}
       <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.1)_1px,transparent_1px)] bg-[length:20px_20px]"></div>
-      
+
       {/* Letter Header */}
       <div className="relative z-10">
         <div className="text-center mb-8">
@@ -32,9 +36,9 @@ const LoveLetterTheme = ({ name1, name2, uploadedImage }: LoveLetterThemeProps) 
             <div className="inline-block p-2 bg-white shadow-sm transform -rotate-1 hover:rotate-0 transition-transform duration-300">
               <div className="w-32 h-32 bg-gradient-to-br from-rose-200 to-pink-300 flex items-center justify-center overflow-hidden">
                 {uploadedImage ? (
-                  <img 
-                    src={uploadedImage} 
-                    alt="Nossa foto especial" 
+                  <img
+                    src={uploadedImage}
+                    alt="Nossa foto especial"
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -49,22 +53,23 @@ const LoveLetterTheme = ({ name1, name2, uploadedImage }: LoveLetterThemeProps) 
             <p className="font-handwriting text-lg text-center italic">
               "Meu querido {recipient},"
             </p>
-            
+
             <p className="text-sm text-justify">
-              Cada dia ao seu lado é um presente. Você trouxe cores para a minha vida 
-              que eu nem sabia que existiam. Obrigado(a) por ser exatamente quem você é.
+              Cada dia ao seu lado é um presente. Você trouxe cores para a minha
+              vida que eu nem sabia que existiam. Obrigado(a) por ser exatamente
+              quem você é.
             </p>
-            
+
             <p className="text-sm text-justify">
-              Nossos momentos juntos são os meus tesouros mais preciosos. 
-              Desde o nosso primeiro encontro até este momento, 
-              cada lembrança é uma joia guardada no meu coração.
+              Nossos momentos juntos são os meus tesouros mais preciosos. Desde
+              o nosso primeiro encontro até este momento, cada lembrança é uma
+              joia guardada no meu coração.
             </p>
-            
+
             <div className="text-center mt-8">
               <p className="text-sm italic text-rose-700">
-                "O amor não é só olhar um para o outro, 
-                é olhar juntos na mesma direção."
+                "O amor não é só olhar um para o outro, é olhar juntos na mesma
+                direção."
               </p>
             </div>
           </div>

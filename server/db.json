@@ -1,4 +1,26 @@
 {
-  "users": [],
-  "subscriptions": []
+  "users": [
+    {
+      "id": "04d4f887-07e6-4ab4-9ba8-f6b975b51949",
+      "email": "admin@admin.com",
+      "password": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"
+    },
+    {
+      "id": "eb9ca6b4-d44a-4e47-8b05-e370a32705f4",
+      "email": "vitor@gmail.com",
+      "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": "a937adee-f009-463a-a528-32950f6a4c5e",
+      "userId": "04d4f887-07e6-4ab4-9ba8-f6b975b51949",
+      "plan": "free"
+    },
+    {
+      "id": "b7191d5d-6b97-48db-a813-67a2afa8587d",
+      "userId": "eb9ca6b4-d44a-4e47-8b05-e370a32705f4",
+      "plan": "free"
+    }
+  ]
 }

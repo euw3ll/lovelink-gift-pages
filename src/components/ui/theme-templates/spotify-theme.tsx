@@ -1,20 +1,24 @@
-import { useRef, useState } from "react";
-import { Play, Heart, MoreHorizontal, Shuffle, SkipBack, SkipForward, Repeat } from "lucide-react";
+// Caminho: src/components/ui/theme-templates/spotify-theme.tsx
 
+import {
+  Play,
+  Heart,
+  MoreHorizontal,
+  Shuffle,
+  SkipBack,
+  SkipForward,
+  Repeat,
+} from "lucide-react";
+import { ThemeComponentProps } from "./types";
+
+// Tipo para uma música individual
 interface SpotifySong {
   title: string;
   artist: string;
-  audio?: string;
-  duration?: string;
+  duration: string;
 }
 
-interface SpotifyThemeProps {
-  name1: string;
-  name2: string;
-  uploadedImage?: string;
-  songs?: SpotifySong[];
-}
-
+// Lista de músicas padrão para demonstração
 const defaultSongs: SpotifySong[] = [
   { title: "Perfect", artist: "Ed Sheeran", duration: "4:23" },
   { title: "All of Me", artist: "John Legend", duration: "4:29" },
@@ -22,122 +26,87 @@ const defaultSongs: SpotifySong[] = [
   { title: "A Thousand Years", artist: "Christina Perri", duration: "4:45" },
 ];
 
-const SpotifyTheme = ({ name1, name2, uploadedImage, songs = [] }: SpotifyThemeProps) => {
-  const playlistName = name1 && name2 ? `${name1} & ${name2}` : "Nossa Playlist";
-  const songList = songs.length > 0 ? songs : defaultSongs;
-  const [currentSong, setCurrentSong] = useState<SpotifySong | null>(
-    songList[0] || null
-  );
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  const playSong = (song: SpotifySong) => {
-    setCurrentSong(song);
-    if (audioRef.current && song.audio) {
-      audioRef.current.src = song.audio;
-      audioRef.current.play().catch(() => {});
-    }
-  };
+const SpotifyTheme = ({ name1, name2, uploadedImage }: ThemeComponentProps) => {
+  const playlistName =
+    name1 && name2 ? `${name1} & ${name2}` : "Nossa Playlist";
+  const songList = defaultSongs; // Usando a lista padrão para o visual
 
   return (
-    <div className="bg-gradient-to-b from-green-900 to-black text-white rounded-lg overflow-hidden min-h-[400px] font-sans">
-      {/* Spotify Header */}
-      <div className="bg-black/50 p-4 flex items-center justify-between">
-        <div className="text-green-400 font-bold text-xl flex items-center gap-2">
-          <div className="w-6 h-6 bg-green-400 rounded-full"></div>
-          Spotify
-        </div>
-      </div>
-
-      {/* Playlist Header */}
-      <div className="p-6 flex gap-6 items-end">
-        <div className="w-48 h-48 bg-gradient-to-br from-green-400 to-green-600 rounded-lg shadow-xl flex items-center justify-center flex-shrink-0">
+    <div className="bg-gradient-to-b from-green-900 via-gray-900 to-black text-white rounded-lg overflow-hidden min-h-[400px] font-sans">
+      {/* Cabeçalho da Playlist */}
+      <div className="p-6 flex flex-col md:flex-row gap-6 items-center md:items-end bg-gradient-to-b from-green-800/60 to-transparent">
+        <div className="w-48 h-48 bg-gray-800 rounded-md shadow-2xl flex items-center justify-center flex-shrink-0">
           {uploadedImage ? (
-            <img 
-              src={uploadedImage} 
-              alt="Playlist Cover" 
-              className="w-full h-full object-cover rounded-lg"
+            <img
+              src={uploadedImage}
+              alt={`Capa da playlist ${playlistName}`}
+              className="w-full h-full object-cover rounded-md"
             />
           ) : (
-            <div className="text-6xl">💕</div>
+            <div className="text-6xl text-gray-500">🎵</div>
           )}
         </div>
-        
-        <div className="space-y-2">
-          <p className="text-sm uppercase tracking-wider">Playlist</p>
-          <h1 className="text-4xl md:text-6xl font-bold">{playlistName}</h1>
-          <p className="text-gray-300">
-            {name1 || "Você"} • {songList.length} músicas
+
+        <div className="space-y-3 text-center md:text-left">
+          <p className="text-sm font-bold uppercase tracking-wider">Playlist</p>
+          <h1 className="text-5xl lg:text-7xl font-black tracking-tighter break-words">
+            {playlistName}
+          </h1>
+          <p className="text-gray-300 text-sm">
+            Criado por {name1 || "Você"} • {songList.length} músicas
           </p>
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="px-6 py-4 flex items-center gap-4">
-        <button className="w-14 h-14 bg-green-400 rounded-full flex items-center justify-center hover:scale-105 transition-transform">
-          <Play size={20} className="text-black ml-1" />
-        </button>
-        <Heart size={24} className="text-green-400" />
-        <MoreHorizontal size={24} className="text-gray-400" />
-      </div>
-
-      {/* Songs List */}
-      <div className="px-6">
-        <div className="grid grid-cols-12 gap-4 text-xs text-gray-400 border-b border-gray-800 pb-2 mb-2">
-          <div className="col-span-1">#</div>
-          <div className="col-span-8">TÍTULO</div>
-          <div className="col-span-3 text-right">DURAÇÃO</div>
-        </div>
-        
-        {songList.map((song, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-12 gap-4 py-2 hover:bg-white/10 rounded group text-sm cursor-pointer"
-            onClick={() => playSong(song)}
-          >
-            <div className="col-span-1 text-gray-400 group-hover:hidden">
-              {index + 1}
-            </div>
-            <div className="col-span-1 hidden group-hover:block">
-              <Play size={14} />
-            </div>
-            <div className="col-span-8">
-              <div className="font-medium">{song.title}</div>
-              <div className="text-xs text-gray-400">{song.artist}</div>
-            </div>
-            <div className="col-span-3 text-right text-gray-400">
-              {song.duration}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Player Footer */}
-      <div className="bg-gray-900 p-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-green-400 rounded flex items-center justify-center text-black text-xs">
-            💕
-          </div>
-          <div>
-            <div className="text-sm font-medium">
-              {currentSong?.title || "Selecione uma música"}
-            </div>
-            <div className="text-xs text-gray-400">
-              {currentSong?.artist}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Shuffle size={16} className="text-gray-400" />
-          <SkipBack size={16} />
-          <button onClick={() => currentSong && playSong(currentSong)}>
-            <Play size={16} />
+      {/* Controles e Lista de Músicas */}
+      <div className="p-6">
+        {/* Controles Principais */}
+        <div className="flex items-center gap-6 mb-6">
+          <button className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-black hover:scale-105 transition-transform shadow-lg shadow-green-500/30">
+            <Play size={28} className="fill-current ml-1" />
           </button>
-          <SkipForward size={16} />
-          <Repeat size={16} className="text-gray-400" />
+          <Heart size={32} className="text-green-500 fill-current" />
+          <MoreHorizontal
+            size={32}
+            className="text-gray-400 hover:text-white"
+          />
+        </div>
+
+        {/* Cabeçalho da Lista de Músicas */}
+        <div className="grid grid-cols-12 gap-4 text-xs text-gray-400 border-b border-white/20 pb-2 mb-2 uppercase tracking-wider">
+          <div className="col-span-1 text-center">#</div>
+          <div className="col-span-8">Título</div>
+          <div className="col-span-3 text-right">Duração</div>
+        </div>
+
+        {/* Lista de Músicas */}
+        <div className="space-y-1">
+          {songList.map((song, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-12 gap-4 p-2 hover:bg-white/10 rounded group text-sm items-center cursor-pointer"
+            >
+              <div className="col-span-1 text-gray-400 text-center group-hover:hidden">
+                {index + 1}
+              </div>
+              <div className="col-span-1 text-gray-400 text-center hidden group-hover:block">
+                <Play size={16} className="fill-current" />
+              </div>
+              <div className="col-span-8">
+                <div className="font-medium text-white truncate">
+                  {song.title}
+                </div>
+                <div className="text-xs text-gray-400 truncate">
+                  {song.artist}
+                </div>
+              </div>
+              <div className="col-span-3 text-right text-gray-400">
+                {song.duration}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-      <audio ref={audioRef} className="hidden" />
     </div>
   );
 };

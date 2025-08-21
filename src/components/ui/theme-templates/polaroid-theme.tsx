@@ -1,89 +1,65 @@
-import { Card } from "@/components/ui/card";
+// Caminho: src/components/ui/theme-templates/polaroid-theme.tsx
 
-interface PolaroidThemeProps {
-  name1: string;
-  name2: string;
-  uploadedImage?: string;
-}
+// A interface importada está correta, não precisa mexer.
+import { ThemeComponentProps } from "./types";
 
-const PolaroidTheme = ({ name1, name2, uploadedImage }: PolaroidThemeProps) => {
-  const coupleNames = name1 && name2 ? `${name1} & ${name2}` : "Nosso Amor";
-  
+// Função auxiliar para formatar a data de forma amigável
+const formatDate = (dateString: string) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  // Adiciona um dia para corrigir problemas comuns de fuso horário com inputs de data
+  date.setDate(date.getDate() + 1);
+  return new Intl.DateTimeFormat("pt-BR").format(date);
+};
+
+// AQUI ESTÁ A CORREÇÃO: Adicionamos name1 e name2 na lista de props
+const PolaroidTheme = ({
+  name1,
+  name2,
+  uploadedImage,
+  caption,
+  date,
+}: ThemeComponentProps) => {
+  // Define textos padrão caso os campos opcionais não sejam preenchidos
+  const displayCaption = caption || `Nosso momento especial ❤️`;
+  const displayDate = date
+    ? formatDate(date)
+    : new Date().toLocaleDateString("pt-BR");
+  const altText = `Foto de ${name1 || "nós"} e ${name2 || "nosso amor"}`;
+
   return (
-    <div className="bg-gradient-to-br from-amber-50 to-orange-100 p-6 rounded-lg min-h-[400px] font-serif">
-      {/* Cork Board Background */}
-      <div className="relative">
-        <h1 className="text-3xl font-bold text-amber-900 text-center mb-8 font-script">
-          {coupleNames}
-        </h1>
-        
-        {/* Polaroid Photos Grid */}
-        <div className="grid grid-cols-2 gap-6 max-w-md mx-auto">
-          {/* Main Photo */}
-          <div className="col-span-2 transform rotate-1">
-            <div className="bg-white p-3 shadow-lg transform hover:rotate-0 transition-transform duration-300">
-              <div className="aspect-square bg-gradient-to-br from-amber-200 to-orange-300 flex items-center justify-center overflow-hidden">
-                {uploadedImage ? (
-                  <img 
-                    src={uploadedImage} 
-                    alt="Nosso momento especial" 
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="text-6xl">💕</div>
-                )}
-              </div>
-              <div className="h-16 flex items-center justify-center">
-                <p className="text-amber-800 text-center font-handwriting text-lg">
-                  Nosso primeiro encontro
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          {/* Small Photos */}
-          <div className="transform -rotate-2">
-            <div className="bg-white p-2 shadow-md">
-              <div className="aspect-square bg-gradient-to-br from-pink-200 to-rose-300 flex items-center justify-center text-2xl">
-                📸
-              </div>
-              <div className="h-8 flex items-center justify-center">
-                <p className="text-xs text-amber-700 font-handwriting">
-                  Primeira foto
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="transform rotate-3">
-            <div className="bg-white p-2 shadow-md">
-              <div className="aspect-square bg-gradient-to-br from-purple-200 to-pink-300 flex items-center justify-center text-2xl">
-                💌
-              </div>
-              <div className="h-8 flex items-center justify-center">
-                <p className="text-xs text-amber-700 font-handwriting">
-                  Primeira carta
-                </p>
-              </div>
-            </div>
-          </div>
+    // Container principal que simula uma "mesa" ou "mural"
+    <div className="bg-gradient-to-br from-amber-100 to-orange-200 p-8 rounded-lg min-h-[400px] flex items-center justify-center font-sans">
+      {/* A "foto" polaroid com sombra e um pouco de rotação */}
+      <div
+        className="
+          bg-white p-4 pb-20 shadow-xl rounded-sm
+          transform -rotate-2 hover:rotate-0 transition-transform duration-300
+          relative w-72" // A base da polaroid
+      >
+        {/* Área da imagem (quadrada) */}
+        <div className="aspect-square bg-gray-200 flex items-center justify-center overflow-hidden">
+          {uploadedImage ? (
+            <img
+              src={uploadedImage}
+              alt={altText} // Usamos os nomes para o texto alternativo da imagem
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            // Placeholder caso não haja imagem
+            <div className="text-6xl text-gray-400">💕</div>
+          )}
         </div>
-        
-        {/* Vintage Elements */}
-        <div className="mt-8 text-center">
-          <div className="inline-block bg-amber-200 px-4 py-2 rounded transform -rotate-1 shadow-sm">
-            <p className="text-amber-900 font-handwriting text-sm">
-              "Alguns momentos merecem ser guardados para sempre" ✨
-            </p>
-          </div>
-        </div>
-        
-        {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 text-amber-600/30 transform rotate-12">
-          <div className="text-6xl">📎</div>
-        </div>
-        <div className="absolute bottom-0 left-0 text-amber-600/30 transform -rotate-12">
-          <div className="text-4xl">🌻</div>
+
+        {/* Área de texto da polaroid */}
+        <div className="absolute bottom-4 left-4 right-4 text-center">
+          <p
+            className="font-handwriting text-amber-900 text-lg truncate"
+            title={displayCaption}
+          >
+            {displayCaption}
+          </p>
+          <p className="text-xs text-gray-500 mt-1">{displayDate}</p>
         </div>
       </div>
     </div>
