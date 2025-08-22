@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/layouts/dashboard-layout";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ import {
   Trash2,
   PlusCircle,
   BarChart2,
+  FileText,
 } from "lucide-react"; // Ícone importado
 import {
   DropdownMenu,
@@ -26,45 +27,41 @@ import {
   DropdownMenuSeparator, // Separador adicionado para organização
 } from "@/components/ui/dropdown-menu";
 
-// Dados mocados para simular as páginas criadas pelo usuário.
-const mockPages = [
-  {
-    id: 1,
-    title: "Nossa Aventura Netflix",
-    theme: "Netflix",
-    themeEmoji: "🎬",
-    createdAt: "15 de ago, 2024",
-    views: 42,
-    imageUrl: "/img-placeholder-1.jpg",
-  },
-  {
-    id: 2,
-    title: "Nossa Playlist Perfeita",
-    theme: "Spotify",
-    themeEmoji: "🎵",
-    createdAt: "10 de jul, 2024",
-    views: 150,
-    imageUrl: "/img-placeholder-2.jpg",
-  },
-  {
-    id: 3,
-    title: "Álbum de Memórias",
-    theme: "Polaroid",
-    themeEmoji: "📸",
-    createdAt: "01 de mai, 2024",
-    views: 88,
-    imageUrl: "/img-placeholder-3.jpg",
-  },
-];
+import { themeRegistry, ThemeType } from "@/lib/themes";
+
+interface Page {
+  id: string;
+  title: string;
+  theme: ThemeType;
+  created_at: string;
+  views: number;
+}
+
+const themeEmojis: Record<ThemeType, string> = {
+  netflix: "🎬",
+  spotify: "🎵",
+  instagram: "📸",
+  polaroid: "📸",
+  "love-letter": "💌",
+  "love-map": "🗺️",
+};
 
 const MyPages = () => {
   const navigate = useNavigate();
+  const [pages, setPages] = useState<Page[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
+      return;
     }
+    fetch("/api/pages", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setPages(data))
+      .catch((err) => console.error(err));
   }, [navigate]);
 
   return (
@@ -82,22 +79,22 @@ const MyPages = () => {
         </Button>
       </div>
 
-      {mockPages.length > 0 ? (
+      {pages.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {mockPages.map((page) => (
+          {pages.map((page) => (
             <Card key={page.id} className="flex flex-col">
               <CardHeader className="p-0 relative">
                 <div className="aspect-video w-full bg-muted rounded-t-lg flex items-center justify-center">
-                  <span className="text-5xl">{page.themeEmoji}</span>
+                  <span className="text-5xl">{themeEmojis[page.theme]}</span>
                 </div>
               </CardHeader>
               <CardContent className="flex-1 p-4">
                 <Badge variant="secondary" className="mb-2">
-                  {page.theme}
+                  {themeRegistry[page.theme].name}
                 </Badge>
                 <CardTitle className="text-lg mb-1">{page.title}</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Criado em: {page.createdAt}
+                  Criado em: {new Date(page.created_at).toLocaleDateString("pt-BR")}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Visualizações: {page.views}
@@ -114,11 +111,8 @@ const MyPages = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    {/* NOVO BOTÃO DE ANALYTICS ADICIONADO ABAIXO */}
                     <DropdownMenuItem
-                      onClick={() =>
-                        navigate(`/dashboard/page/${page.id}/analytics`)
-                      }
+                      onClick={() => navigate(`/dashboard/page/${page.id}/analytics`)}
                     >
                       <BarChart2 className="mr-2 h-4 w-4" /> Analytics
                     </DropdownMenuItem>

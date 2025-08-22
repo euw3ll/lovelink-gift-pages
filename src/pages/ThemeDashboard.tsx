@@ -39,11 +39,31 @@ const ThemeDashboardPage = () => {
     }
   }, [navigate]);
 
-  const handleFormSubmit = (data: ThemeData) => {
-    console.log("Dados da página salvos:", {
-      theme: selectedTheme,
-      data,
-    });
+  const handleFormSubmit = async (data: ThemeData) => {
+    const token = localStorage.getItem("token");
+    if (!token || !selectedTheme) {
+      navigate("/login");
+      return;
+    }
+    const dataWithTitle = data as Record<string, unknown> & { bannerTitle?: string };
+    const title =
+      dataWithTitle.bannerTitle || themeRegistry[selectedTheme].name;
+    try {
+      const res = await fetch("/api/pages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ title, theme: selectedTheme, data }),
+      });
+      if (!res.ok) {
+        throw new Error("Falha ao salvar página");
+      }
+      navigate("/dashboard/my-pages");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   if (selectedTheme) {

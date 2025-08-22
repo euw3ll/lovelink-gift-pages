@@ -1,7 +1,7 @@
 // src/components/ui/ThemeForm.tsx
 
 import React, { useEffect } from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray, Controller, Control } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,7 +29,7 @@ const DynamicFormField = ({
   fieldName,
 }: {
   field: ThemeField;
-  control: any;
+  control: Control<Record<string, unknown>>;
   fieldName: string;
 }) => {
   const placeholder = field.placeholder || `Insira a URL aqui...`;
@@ -99,13 +99,13 @@ const ThemeForm = ({ theme, initialData, onSubmit }: ThemeFormProps) => {
     ? themeConfig.fieldLists[0]
     : null;
 
-  const { fields } = useFieldArray({
+  const { fields } = useFieldArray<ThemeData>({
     control,
     // Garante que só vamos usar o useFieldArray se houver um fieldList definido
-    name: fieldListConfig ? (fieldListConfig.id as any) : "dummy",
+    name: fieldListConfig ? (fieldListConfig.id as keyof ThemeData) : "dummy",
   });
 
-  const onFormSubmit = (data: any) => {
+  const onFormSubmit = (data: ThemeData) => {
     onSubmit(data);
     toast.success("Página salva com sucesso!", {
       description: "Suas alterações foram guardadas.",
