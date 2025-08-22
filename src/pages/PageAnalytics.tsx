@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import DashboardLayout from "@/components/layouts/dashboard-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,31 +13,34 @@ import {
 } from "recharts";
 import { Eye, Users, ArrowLeft } from "lucide-react";
 
-// Dados mocados para o gráfico e os cartões.
-const mockAnalyticsData = {
-  totalViews: 150,
-  uniqueVisitors: 85,
-  dailyViews: [
-    { day: "Seg", views: 10 },
-    { day: "Ter", views: 25 },
-    { day: "Qua", views: 15 },
-    { day: "Qui", views: 40 },
-    { day: "Sex", views: 30 },
-    { day: "Sáb", views: 20 },
-    { day: "Dom", views: 10 },
-  ],
-};
+interface AnalyticsData {
+  totalViews: number;
+  uniqueVisitors: number;
+  dailyViews: { day: string; views: number }[];
+}
 
 const PageAnalytics = () => {
   const navigate = useNavigate();
-  const { pageId } = useParams(); // Futuramente, usaremos este ID para buscar dados reais.
+  const { pageId } = useParams();
+  const [analytics, setAnalytics] = useState<AnalyticsData>({
+    totalViews: 0,
+    uniqueVisitors: 0,
+    dailyViews: [],
+  });
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
+      return;
     }
-  }, [navigate]);
+    fetch(`/api/pages/${pageId}/analytics`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setAnalytics(data))
+      .catch((err) => console.error(err));
+  }, [navigate, pageId]);
 
   return (
     <DashboardLayout>
@@ -71,7 +74,7 @@ const PageAnalytics = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {mockAnalyticsData.totalViews}
+                {analytics.totalViews}
               </div>
               <p className="text-xs text-muted-foreground">
                 Desde a publicação
@@ -87,7 +90,7 @@ const PageAnalytics = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {mockAnalyticsData.uniqueVisitors}
+                {analytics.uniqueVisitors}
               </div>
               <p className="text-xs text-muted-foreground">
                 Pessoas diferentes que viram
@@ -104,7 +107,7 @@ const PageAnalytics = () => {
           <CardContent>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={mockAnalyticsData.dailyViews}>
+                <BarChart data={analytics.dailyViews}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis
                     dataKey="day"

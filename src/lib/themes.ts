@@ -41,7 +41,7 @@ export interface ThemeConfig {
   description: string;
   fields?: ThemeFormSection[]; // Campos principais do formulário
   fieldLists?: ThemeFieldList[]; // Listas de campos, como a grade de filmes
-  getDefaultData: () => any; // Função que retorna a estrutura de dados padrão para um novo item
+  getDefaultData: () => Record<string, unknown>; // Função que retorna a estrutura de dados padrão para um novo item
 }
 
 // Tipos de temas disponíveis em todo o sistema
