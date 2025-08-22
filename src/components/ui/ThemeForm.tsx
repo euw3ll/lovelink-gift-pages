@@ -40,11 +40,13 @@ const DynamicFormField = ({
         <Controller
           name={fieldName}
           control={control}
+          rules={{ required: true }}
           render={({ field: controllerField }) => (
             <Textarea
               {...controllerField}
               value={controllerField.value || ""}
               placeholder={field.placeholder}
+              required
             />
           )}
         />
@@ -54,11 +56,13 @@ const DynamicFormField = ({
         <Controller
           name={fieldName}
           control={control}
+          rules={{ required: true }}
           render={({ field: controllerField }) => (
             <Input
               type="date"
               {...controllerField}
               value={controllerField.value || ""}
+              required
             />
           )}
         />
@@ -71,11 +75,13 @@ const DynamicFormField = ({
         <Controller
           name={fieldName}
           control={control}
+          rules={{ required: true }}
           render={({ field: controllerField }) => (
             <Input
               {...controllerField}
               value={controllerField.value || ""}
               placeholder={placeholder}
+              required
             />
           )}
         />
