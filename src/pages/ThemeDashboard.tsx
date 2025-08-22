@@ -31,6 +31,9 @@ const themes: ThemeInfo[] = Object.entries(themeRegistry).map(
 const ThemeDashboardPage = () => {
   const navigate = useNavigate();
   const [selectedTheme, setSelectedTheme] = useState<ThemeType | null>(null);
+  const [createdPage, setCreatedPage] = useState<{ shareUrl: string } | null>(
+    null,
+  );
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -60,11 +63,24 @@ const ThemeDashboardPage = () => {
       if (!res.ok) {
         throw new Error("Falha ao salvar página");
       }
-      navigate("/dashboard/my-pages");
+      const page = (await res.json()) as { shareUrl: string };
+      setCreatedPage(page);
     } catch (err) {
       console.error(err);
     }
   };
+
+  if (createdPage) {
+    return (
+      <div className="max-w-md mx-auto p-4 space-y-4 text-center">
+        <h2 className="text-2xl font-bold">Página criada com sucesso!</h2>
+        <p className="break-all text-primary">
+          <a href={createdPage.shareUrl}>{createdPage.shareUrl}</a>
+        </p>
+        <Button onClick={() => navigate("/dashboard")}>Voltar ao dashboard</Button>
+      </div>
+    );
+  }
 
   if (selectedTheme) {
     return (
@@ -80,6 +96,14 @@ const ThemeDashboardPage = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <Button
+        variant="outline"
+        className="mb-4"
+        onClick={() => navigate("/dashboard")}
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Voltar ao dashboard
+      </Button>
       <h1 className="text-3xl font-bold text-center mb-2">Criar Nova Página</h1>
       <p className="text-muted-foreground text-center mb-8">
         Primeiro, escolha um tema para começar.
