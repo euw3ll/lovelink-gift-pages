@@ -60,6 +60,23 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Backend
+
+O projeto inclui um backend em Node/Express que fornece autenticação via JWT com refresh tokens e endpoints de analytics.
+
+### Configuração
+
+1. Copie `.env.example` para `.env` e preencha as variáveis.
+2. Aplique as migrations em `server/db/migrations` no seu banco PostgreSQL.
+3. Instale as dependências (`npm install`).
+4. Inicie o servidor com `npm run server`.
+
+### Principais rotas
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/analytics` (apenas para usuários com papel `admin`)
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/c15f88e2-44ee-4bc7-b557-e5a7aa02ef06) and click on Share -> Publish.

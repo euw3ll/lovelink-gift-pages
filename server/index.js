@@ -1,104 +1,37 @@
-import http from 'http';
-import { readFileSync, writeFileSync } from 'fs';
-import { randomUUID, createHmac, createHash } from 'crypto';
-import url from 'url';
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import dotenv from 'dotenv';
 
-const PORT = 4000;
-const SECRET = 'secret-key';
+import authRoutes from './routes/auth.js';
+import analyticsRoutes from './routes/analytics.js';
 
-function readDB() {
-  const data = readFileSync(new URL('./db.json', import.meta.url));
-  return JSON.parse(data.toString());
-}
+dotenv.config();
 
-function writeDB(data) {
-  writeFileSync(new URL('./db.json', import.meta.url), JSON.stringify(data, null, 2));
-}
+const app = express();
+const port = process.env.PORT || 4000;
 
-function generateToken(payload) {
-  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
-  const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
-  const signature = createHmac('sha256', SECRET)
-    .update(`${header}.${body}`)
-    .digest('base64url');
-  return `${header}.${body}.${signature}`;
-}
+app.use(helmet());
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN ?? '*',
+  }),
+);
+app.use(express.json({ limit: '1mb' }));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 
-const server = http.createServer((req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-  if (req.method === 'OPTIONS') {
-    res.writeHead(204);
-    res.end();
-    return;
-  }
-
-  const parsedUrl = url.parse(req.url, true);
-
-  if (req.method === 'POST' && parsedUrl.pathname === '/api/register') {
-    let body = '';
-    req.on('data', (chunk) => {
-      body += chunk;
-    });
-    req.on('end', () => {
-      try {
-        const { email, password } = JSON.parse(body);
-        const db = readDB();
-        if (db.users.find((u) => u.email === email)) {
-          res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'User already exists' }));
-          return;
-        }
-        const user = {
-          id: randomUUID(),
-          email,
-          password: createHash('sha256').update(password).digest('hex'),
-        };
-        db.users.push(user);
-        db.subscriptions.push({ id: randomUUID(), userId: user.id, plan: 'free' });
-        writeDB(db);
-        const token = generateToken({ id: user.id, email: user.email });
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ token }));
-      } catch (err) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Server error' }));
-      }
-    });
-    return;
-  }
-
-  if (req.method === 'POST' && parsedUrl.pathname === '/api/login') {
-    let body = '';
-    req.on('data', (chunk) => {
-      body += chunk;
-    });
-    req.on('end', () => {
-      try {
-        const { email, password } = JSON.parse(body);
-        const db = readDB();
-        const user = db.users.find((u) => u.email === email);
-        if (!user || user.password !== createHash('sha256').update(password).digest('hex')) {
-          res.writeHead(401, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'Invalid credentials' }));
-          return;
-        }
-        const token = generateToken({ id: user.id, email: user.email });
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ token }));
-      } catch (err) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Server error' }));
-      }
-    });
-    return;
-  }
-
-  res.writeHead(404, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ error: 'Not Found' }));
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: 'ok' });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+app.use('/api/auth', authRoutes);
+app.use('/api/analytics', analyticsRoutes);
+
+app.use((_req, res) => {
+  res.status(404).json({ error: 'Not Found' });
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
