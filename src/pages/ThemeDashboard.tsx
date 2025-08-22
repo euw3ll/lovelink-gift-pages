@@ -1,8 +1,13 @@
+// src/pages/ThemeDashboard.tsx
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import ThemeDashboardForm, { ThemeType } from "@/components/ui/theme-templates/theme-dashboard";
+import { ArrowLeft } from "lucide-react";
+import ThemeForm from "@/components/ui/ThemeForm"; // CORREÇÃO AQUI
+import { ThemeType, themeRegistry, ThemeConfig } from "@/lib/themes"; // CORREÇÃO AQUI
+import { ThemeData } from "@/components/ui/theme-templates/types";
 
 interface ThemeInfo {
   id: ThemeType;
@@ -12,50 +17,16 @@ interface ThemeInfo {
   emoji: string;
 }
 
-const themes: ThemeInfo[] = [
-  {
-    id: "netflix",
-    name: "Netflix & Chill",
-    description: "Crie sua própria série romântica",
-    color: "from-red-600 to-red-800",
-    emoji: "🎬",
-  },
-  {
-    id: "spotify",
-    name: "Spotify Love",
-    description: "Playlist dos seus momentos juntos",
-    color: "from-green-500 to-green-700",
-    emoji: "🎵",
-  },
-  {
-    id: "polaroid",
-    name: "Álbum Polaroid",
-    description: "Memórias em fotos vintage",
-    color: "from-amber-400 to-orange-500",
-    emoji: "📸",
-  },
-  {
-    id: "instagram",
-    name: "Instagram Stories",
-    description: "Stories que ficam para sempre",
-    color: "from-purple-500 to-pink-500",
-    emoji: "📱",
-  },
-  {
-    id: "love-letter",
-    name: "Carta de Amor",
-    description: "Elegância clássica e atemporal",
-    color: "from-rose-400 to-pink-600",
-    emoji: "💌",
-  },
-  {
-    id: "love-map",
-    name: "Mapa do Amor",
-    description: "Lugares especiais da relação",
-    color: "from-blue-500 to-cyan-500",
-    emoji: "🗺️",
-  },
-];
+// CORREÇÃO AQUI: Adicionamos a tipagem [string, ThemeConfig] para o 'config'
+const themes: ThemeInfo[] = Object.entries(themeRegistry).map(
+  ([id, config]: [string, ThemeConfig]) => ({
+    id: id as ThemeType,
+    name: config.name,
+    description: config.description,
+    color: "from-gray-400 to-gray-600",
+    emoji: "✨",
+  })
+);
 
 const ThemeDashboardPage = () => {
   const navigate = useNavigate();
@@ -68,25 +39,36 @@ const ThemeDashboardPage = () => {
     }
   }, [navigate]);
 
+  const handleFormSubmit = (data: ThemeData) => {
+    console.log("Dados da página salvos:", {
+      theme: selectedTheme,
+      data,
+    });
+  };
+
   if (selectedTheme) {
     return (
       <div className="max-w-3xl mx-auto p-4 space-y-6">
         <Button variant="outline" onClick={() => setSelectedTheme(null)}>
-          Voltar
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Voltar para a seleção de temas
         </Button>
-        <ThemeDashboardForm theme={selectedTheme} />
+        <ThemeForm theme={selectedTheme} onSubmit={handleFormSubmit} />
       </div>
     );
   }
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold text-center mb-8">Escolha um Tema</h1>
+      <h1 className="text-3xl font-bold text-center mb-2">Criar Nova Página</h1>
+      <p className="text-muted-foreground text-center mb-8">
+        Primeiro, escolha um tema para começar.
+      </p>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {themes.map((theme, index) => (
           <Card
             key={theme.id}
-            className="group overflow-hidden hover:shadow-[var(--shadow-love)] transition-all duration-500 hover:scale-105 cursor-pointer border-border/50 hover:border-primary/30"
+            className="group overflow-hidden hover:shadow-[var(--shadow-love)] transition-all duration-300 hover:scale-105 cursor-pointer border-border/50 hover:border-primary/30"
             style={{ animationDelay: `${index * 0.1}s` }}
             onClick={() => setSelectedTheme(theme.id)}
           >
@@ -100,7 +82,9 @@ const ThemeDashboardPage = () => {
                 <h3 className="text-lg font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
                   {theme.name}
                 </h3>
-                <p className="text-muted-foreground text-sm">{theme.description}</p>
+                <p className="text-muted-foreground text-sm">
+                  {theme.description}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -111,4 +95,3 @@ const ThemeDashboardPage = () => {
 };
 
 export default ThemeDashboardPage;
-
